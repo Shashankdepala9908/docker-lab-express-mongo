@@ -1,0 +1,24 @@
+
+version: "3.8"
+
+services:
+  api:
+    build: .
+    ports: ["8080:8080"]
+    environment:
+      MONGO_URL: "mongodb://mongo:27017"
+      MONGO_DB: "labdb"
+    depends_on:
+      mongo:
+        condition: service_started
+    networks: ["privnet"]
+
+  mongo:
+    image: mongo:7
+    command: ["--wiredTigerCacheSizeGB","0.5"]  # tiny local footprint
+    volumes: ["mongodata:/data/db"]
+    networks: ["privnet"]
+
+networks: { privnet: {} }
+volumes:  { mongodata: {} }
+
